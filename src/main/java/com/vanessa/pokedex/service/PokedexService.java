@@ -23,5 +23,8 @@ public class PokedexService {
         return obj.get();
         }
 
+    public Pokedex insert(Pokedex obj){
+    return repository.save(obj);
+        }
 
 }
