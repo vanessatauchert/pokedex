@@ -9,6 +9,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,9 +44,13 @@ public class PokedexService {
         }
 
         public Pokedex update(Long id, Pokedex obj){
-        Pokedex entity = repository.getOne(id);
-        updateData(entity, obj);
-        return repository.save(entity);
+        try {
+            Pokedex entity = repository.getOne(id);
+            updateData(entity, obj);
+            return repository.save(entity);
+        } catch(EntityNotFoundException e) {
+            throw new ResourceNotFoundExcepetion(id);
+        }
         }
 
     private void updateData(Pokedex entity, Pokedex obj) {
