@@ -2,6 +2,7 @@ package com.vanessa.pokedex.service;
 
 import com.vanessa.pokedex.entities.Pokedex;
 import com.vanessa.pokedex.repository.PokedexRepository;
+import com.vanessa.pokedex.service.exceptions.ResourceNotFoundExcepetion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,7 @@ public class PokedexService {
 
     public Pokedex findById(Long id){
         Optional<Pokedex> obj = repository.findById(id);
-        return obj.get();
+        return obj.orElseThrow(()-> new ResourceNotFoundExcepetion(id));
         }
 
     public Pokedex insert(Pokedex obj){
@@ -31,4 +32,16 @@ public class PokedexService {
         repository.deleteById(id);
         }
 
+        public Pokedex update(Long id, Pokedex obj){
+        Pokedex entity = repository.getOne(id);
+        updateData(entity, obj);
+        return repository.save(entity);
+        }
+
+    private void updateData(Pokedex entity, Pokedex obj) {
+        entity.setName(obj.getName());
+        entity.setCategory(obj.getCategory());
+        entity.setHability(obj.getHability());
+        entity.setHeight(obj.getHeight());
+    }
 }
