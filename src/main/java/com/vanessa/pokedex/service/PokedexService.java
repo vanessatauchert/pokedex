@@ -2,8 +2,11 @@ package com.vanessa.pokedex.service;
 
 import com.vanessa.pokedex.entities.Pokedex;
 import com.vanessa.pokedex.repository.PokedexRepository;
+import com.vanessa.pokedex.service.exceptions.DatabaseException;
 import com.vanessa.pokedex.service.exceptions.ResourceNotFoundExcepetion;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,7 +32,14 @@ public class PokedexService {
         }
 
         public void delete(Long id){
-        repository.deleteById(id);
+        try {
+            repository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundExcepetion(id);
+        }catch (DataIntegrityViolationException e) {
+            throw new DatabaseException(e.getMessage());
+        }
+
         }
 
         public Pokedex update(Long id, Pokedex obj){
