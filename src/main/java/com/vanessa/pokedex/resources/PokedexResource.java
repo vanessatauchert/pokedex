@@ -43,7 +43,7 @@ public class PokedexResource {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping(value = "/{id}")
+    @PutMapping(value = "/{id}")
     public ResponseEntity<Pokedex> update(@PathVariable Long id, @RequestBody Pokedex obj) {
         service.update(id, obj);
         return ResponseEntity.ok().body(obj);
